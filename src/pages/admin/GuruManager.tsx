@@ -49,7 +49,7 @@ export default function GuruManager() {
     setLoading(false);
   };
 
-  const handleDelete = (id: string, nama: string) => {
+  const handleDelete = async (id: string, nama: string) => {
     if (confirm(`Yakin ingin menghapus data ${nama}?`)) {
       if (isDummy) {
         const updated = gurus.filter(g => g.id !== id);
@@ -58,12 +58,20 @@ export default function GuruManager() {
         toast.success(`(Dummy) Data ${nama} berhasil dihapus.`);
         return;
       }
-      // Actual Supabase deletion would go here
-      toast.info('Penghapusan via database belum diaktifkan.');
+      
+      setLoading(true);
+      const { error } = await supabase.from('teachers').delete().eq('id', id);
+      if (error) {
+        toast.error('Gagal menghapus data: ' + error.message);
+      } else {
+        toast.success(`Data ${nama} berhasil dihapus.`);
+        fetchGurus();
+      }
+      setLoading(false);
     }
   };
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isDummy) {
       let updated;
@@ -83,8 +91,40 @@ export default function GuruManager() {
       setFormData({ id: '', nip: '', nama: '', mata_pelajaran: '' });
       return;
     }
-    // Actual Supabase save would go here
-    toast.info('Penyimpanan via database belum diaktifkan.');
+    
+    setLoading(true);
+    if (formData.id) {
+      // Edit Mode
+      const { error } = await supabase.from('teachers').update({
+        nip: formData.nip,
+        nama: formData.nama,
+        mata_pelajaran: formData.mata_pelajaran
+      }).eq('id', formData.id);
+      
+      if (error) {
+        toast.error('Gagal memperbarui data: ' + error.message);
+      } else {
+        toast.success(`Data ${formData.nama} berhasil diperbarui.`);
+        setIsModalOpen(false);
+        fetchGurus();
+      }
+    } else {
+      // Add Mode
+      const { error } = await supabase.from('teachers').insert([{
+        nip: formData.nip,
+        nama: formData.nama,
+        mata_pelajaran: formData.mata_pelajaran
+      }]);
+      
+      if (error) {
+        toast.error('Gagal menambah data: ' + error.message);
+      } else {
+        toast.success(`Data ${formData.nama} berhasil ditambahkan.`);
+        setIsModalOpen(false);
+        fetchGurus();
+      }
+    }
+    setLoading(false);
   };
 
   const openModalForAdd = () => {
