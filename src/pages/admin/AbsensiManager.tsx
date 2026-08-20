@@ -78,7 +78,7 @@ export default function AbsensiManager() {
     const { error } = await supabase
       .from('attendance')
       .delete()
-      .neq('id', 0);
+      .not('id', 'is', null);
 
     if (error) {
       toast.error('Gagal mereset data absensi');
