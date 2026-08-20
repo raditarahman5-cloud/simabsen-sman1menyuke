@@ -58,16 +58,16 @@ ALTER TABLE attendance ENABLE ROW LEVEL SECURITY;
 -- Create Policies
 -- Settings: Anyone can read, only authenticated can update
 CREATE POLICY "Public Settings Select" ON settings FOR SELECT USING (true);
-CREATE POLICY "Auth Settings Update" ON settings FOR UPDATE USING (auth.role() = 'authenticated');
+CREATE POLICY "Public Settings Update" ON settings FOR UPDATE USING (true);
 
 -- Teachers: Anyone can read (for absensi public page), only authenticated can insert/update/delete
 CREATE POLICY "Public Teachers Select" ON teachers FOR SELECT USING (true);
-CREATE POLICY "Auth Teachers Insert" ON teachers FOR INSERT WITH CHECK (auth.role() = 'authenticated');
-CREATE POLICY "Auth Teachers Update" ON teachers FOR UPDATE USING (auth.role() = 'authenticated');
-CREATE POLICY "Auth Teachers Delete" ON teachers FOR DELETE USING (auth.role() = 'authenticated');
+CREATE POLICY "Public Teachers Insert" ON teachers FOR INSERT WITH CHECK (true);
+CREATE POLICY "Public Teachers Update" ON teachers FOR UPDATE USING (true);
+CREATE POLICY "Public Teachers Delete" ON teachers FOR DELETE USING (true);
 
 -- Attendance: Anyone can insert (for absensi public page) & read own? We need public to insert and read.
 CREATE POLICY "Public Attendance Insert" ON attendance FOR INSERT WITH CHECK (true);
 CREATE POLICY "Public Attendance Select" ON attendance FOR SELECT USING (true);
-CREATE POLICY "Auth Attendance Update" ON attendance FOR UPDATE USING (auth.role() = 'authenticated');
-CREATE POLICY "Auth Attendance Delete" ON attendance FOR DELETE USING (auth.role() = 'authenticated');
+CREATE POLICY "Public Attendance Update" ON attendance FOR UPDATE USING (true);
+CREATE POLICY "Public Attendance Delete" ON attendance FOR DELETE USING (true);
