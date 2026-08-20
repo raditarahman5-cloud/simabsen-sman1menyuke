@@ -20,7 +20,7 @@ export default function Home() {
   const [settings, setSettings] = useState({
     namaInstansi: 'SMAN 1 MENYUKE',
     penyelenggara: 'Dinas Pendidikan Provinsi Kalimantan Barat',
-    batasTerlambat: '07:15',
+    batasTerlambat: '07:00',
   });
 
   useEffect(() => {

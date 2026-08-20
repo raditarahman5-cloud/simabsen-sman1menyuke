@@ -10,8 +10,8 @@ CREATE TABLE IF NOT EXISTS settings (
   principal_name TEXT,
   principal_nip TEXT,
   signature TEXT,
-  work_start TIME NOT NULL DEFAULT '07:00:00',
-  late_limit TIME NOT NULL DEFAULT '07:15:00',
+  work_start TIME NOT NULL DEFAULT '06:00:00',
+  late_limit TIME NOT NULL DEFAULT '07:00:00',
   theme TEXT DEFAULT 'light',
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
