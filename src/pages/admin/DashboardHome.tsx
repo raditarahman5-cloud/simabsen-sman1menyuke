@@ -1,6 +1,7 @@
 import { Users, Clock, CheckCircle, XCircle } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { useState, useEffect } from 'react';
+import { supabase } from '../../supabase/client';
 import dayjs from 'dayjs';
 import 'dayjs/locale/id';
 
@@ -17,10 +18,27 @@ export default function DashboardHome() {
   const [weeklyData, setWeeklyData] = useState<any[]>([]);
 
   useEffect(() => {
-    // Dynamic calculation from dummy mode
-    const teachers = JSON.parse(localStorage.getItem('dummy_teachers') || '[]');
-    const attendance = JSON.parse(localStorage.getItem('dummy_attendance') || '[]');
+    fetchStats();
+  }, []);
+
+  const fetchStats = async () => {
+    const isDummy = !import.meta.env.VITE_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL === 'taruh_url_anda_disini';
     const todayStr = dayjs().format('YYYY-MM-DD');
+
+    let teachers: any[] = [];
+    let attendance: any[] = [];
+
+    if (isDummy) {
+      teachers = JSON.parse(localStorage.getItem('dummy_teachers') || '[]');
+      attendance = JSON.parse(localStorage.getItem('dummy_attendance') || '[]');
+    } else {
+      const [{ data: teachersData }, { data: attendanceData }] = await Promise.all([
+        supabase.from('teachers').select('id'),
+        supabase.from('attendance').select('*')
+      ]);
+      teachers = teachersData || [];
+      attendance = attendanceData || [];
+    }
 
     const totalPegawai = teachers.length || 0;
     const todayAttendance = attendance.filter((a: any) => a.tanggal === todayStr);
@@ -58,7 +76,7 @@ export default function DashboardHome() {
       });
     }
     setWeeklyData(newWeeklyData);
-  }, []);
+  };
 
   return (
     <div className="space-y-6">

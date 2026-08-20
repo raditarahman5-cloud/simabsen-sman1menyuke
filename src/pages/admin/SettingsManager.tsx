@@ -5,8 +5,8 @@ import { toast } from 'sonner';
 const defaultSettings = {
   namaInstansi: 'SMAN 1 MENYUKE',
   penyelenggara: 'Dinas Pendidikan Provinsi Kalimantan Barat',
-  jamMasuk: '06:30',
-  batasTerlambat: '07:15',
+  jamMasuk: '06:00',
+  batasTerlambat: '07:00',
 };
 
 export default function SettingsManager() {
@@ -45,11 +45,11 @@ export default function SettingsManager() {
       <form onSubmit={handleSave} className="bg-white border border-slate-200 rounded-lg p-6 max-w-2xl shadow-sm space-y-6">
         <div className="space-y-4">
           <h3 className="font-bold text-slate-700 border-b border-slate-100 pb-2">Identitas Sekolah</h3>
-          
+
           <div className="space-y-1.5">
             <label className="block text-xs font-bold text-slate-600 uppercase">Nama Instansi</label>
-            <input 
-              type="text" 
+            <input
+              type="text"
               name="namaInstansi"
               value={settings.namaInstansi}
               onChange={handleChange}
@@ -58,8 +58,8 @@ export default function SettingsManager() {
           </div>
           <div className="space-y-1.5">
             <label className="block text-xs font-bold text-slate-600 uppercase">Penyelenggara</label>
-            <input 
-              type="text" 
+            <input
+              type="text"
               name="penyelenggara"
               value={settings.penyelenggara}
               onChange={handleChange}
@@ -70,12 +70,12 @@ export default function SettingsManager() {
 
         <div className="space-y-4 pt-4">
           <h3 className="font-bold text-slate-700 border-b border-slate-100 pb-2">Aturan Waktu</h3>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <label className="block text-xs font-bold text-slate-600 uppercase">Jam Masuk (Normal)</label>
-              <input 
-                type="time" 
+              <input
+                type="time"
                 name="jamMasuk"
                 value={settings.jamMasuk}
                 onChange={handleChange}
@@ -84,8 +84,8 @@ export default function SettingsManager() {
             </div>
             <div className="space-y-1.5">
               <label className="block text-xs font-bold text-slate-600 uppercase">Batas Keterlambatan</label>
-              <input 
-                type="time" 
+              <input
+                type="time"
                 name="batasTerlambat"
                 value={settings.batasTerlambat}
                 onChange={handleChange}
@@ -99,8 +99,8 @@ export default function SettingsManager() {
         </div>
 
         <div className="pt-6 border-t border-slate-100 flex justify-end">
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             disabled={loading}
             className="bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 px-6 rounded shadow transition-colors flex items-center gap-2 uppercase tracking-wide text-sm disabled:opacity-70"
           >

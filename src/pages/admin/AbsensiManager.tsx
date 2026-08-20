@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../../supabase/client';
 import { toast } from 'sonner';
 import dayjs from 'dayjs';
-import { Calendar as CalendarIcon } from 'lucide-react';
+import { Calendar as CalendarIcon, Trash2 } from 'lucide-react';
 
 export default function AbsensiManager() {
   const [attendance, setAttendance] = useState<any[]>([]);
@@ -63,6 +63,32 @@ export default function AbsensiManager() {
     }
   };
 
+  const handleResetAttendance = async () => {
+    if (!window.confirm('Apakah Anda yakin ingin mereset seluruh data absensi (menjadi 0)? Tindakan ini tidak dapat dibatalkan.')) return;
+    
+    setLoading(true);
+    if (isDummy) {
+      localStorage.setItem('dummy_attendance', JSON.stringify([]));
+      setAttendance([]);
+      toast.success('Data absensi berhasil direset menjadi 0');
+      setLoading(false);
+      return;
+    }
+
+    const { error } = await supabase
+      .from('attendance')
+      .delete()
+      .neq('id', 0);
+
+    if (error) {
+      toast.error('Gagal mereset data absensi');
+    } else {
+      setAttendance([]);
+      toast.success('Data absensi berhasil direset menjadi 0');
+    }
+    setLoading(false);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -70,21 +96,30 @@ export default function AbsensiManager() {
           <h2 className="text-xl font-bold text-slate-800 uppercase tracking-wide">Rekapitulasi Presensi</h2>
           <p className="text-sm text-slate-500">Pantau kehadiran pegawai secara real-time.</p>
         </div>
-        <div className="flex items-center gap-3">
-          <label className="text-sm font-bold text-slate-700 uppercase">Tanggal:</label>
-          <div 
-            onClick={handleDateContainerClick}
-            className="relative cursor-pointer group"
-          >
-            <CalendarIcon size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-hover:text-slate-700 transition-colors pointer-events-none" />
-            <input 
-              ref={dateInputRef}
-              type="date" 
-              value={dateFilter}
-              onChange={(e) => setDateFilter(e.target.value)}
-              className="pl-10 p-2.5 w-[160px] border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-slate-900 focus:border-slate-900 outline-none text-sm font-bold text-slate-900 shadow-sm cursor-pointer hover:border-slate-400 transition-colors"
-            />
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+          <div className="flex items-center gap-3">
+            <label className="text-sm font-bold text-slate-700 uppercase">Tanggal:</label>
+            <div 
+              onClick={handleDateContainerClick}
+              className="relative cursor-pointer group"
+            >
+              <CalendarIcon size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-hover:text-slate-700 transition-colors pointer-events-none" />
+              <input 
+                ref={dateInputRef}
+                type="date" 
+                value={dateFilter}
+                onChange={(e) => setDateFilter(e.target.value)}
+                className="pl-10 p-2.5 w-[160px] border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-slate-900 focus:border-slate-900 outline-none text-sm font-bold text-slate-900 shadow-sm cursor-pointer hover:border-slate-400 transition-colors"
+              />
+            </div>
           </div>
+          <button 
+            onClick={handleResetAttendance}
+            className="flex items-center justify-center gap-2 px-4 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-lg text-sm font-bold uppercase transition-colors shadow-sm w-full sm:w-auto"
+          >
+            <Trash2 size={16} />
+            Reset Data
+          </button>
         </div>
       </div>
 
